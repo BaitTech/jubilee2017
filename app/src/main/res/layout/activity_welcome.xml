@@ -1,0 +1,272 @@
+<!--
+  ~ /*
+  ~  * ﻿Copyright 2017 Bait Inc
+  ~  * Licensed under the Apache License, Version 2.0 Jubilee 2017;
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *     http://www.apache.org/licenses/LICENSE-2.0
+  ~  * Unless required by applicable law or agreed to in writing,
+  ~  * software distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  *  limitations under the License.
+  ~  */
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="inc.bait.jubilee.ui.activity.SplashActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="match_parent"
+        android:id="@+id/backgroundImage"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:layout_above="@+id/bottomLayout" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottomLayout"
+        android:layout_gravity="bottom">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="20dp"
+            android:background="@null"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:id="@+id/otherLayout">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/line1"
+                    android:background="@color/yellow"
+                    android:layout_toLeftOf="@+id/startLayout"
+                    android:layout_centerVertical="true" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:id="@+id/startLayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="10dp"
+                    android:layout_centerVertical="true">
+                    <ImageView
+                        app:srcCompat="@drawable/ic_round_star"
+
+                        android:layout_weight="1"
+                        android:layout_height="10dp"
+                        android:layout_width="10dp"
+                        android:background="@null"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp" />
+                    <ImageView
+                        app:srcCompat="@drawable/ic_round_star"
+
+                        android:layout_weight="1"
+                        android:layout_height="10dp"
+                        android:layout_width="10dp"
+                        android:background="@null"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp" />
+                    <ImageView
+                        app:srcCompat="@drawable/ic_round_star"
+
+                        android:layout_weight="1"
+                        android:layout_height="10dp"
+                        android:layout_width="10dp"
+                        android:background="@null"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp" />
+                    <ImageView
+                        app:srcCompat="@drawable/ic_round_star"
+
+                        android:layout_weight="1"
+                        android:layout_height="10dp"
+                        android:layout_width="10dp"
+                        android:background="@null"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp" />
+                    <ImageView
+                        app:srcCompat="@drawable/ic_round_star"
+
+                        android:layout_weight="1"
+                        android:layout_height="10dp"
+                        android:layout_width="10dp"
+                        android:background="@null"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/line2"
+                    android:background="@color/yellow"
+                    android:layout_toRightOf="@+id/startLayout"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:id="@+id/middleLayout"
+                android:layout_below="@+id/otherLayout">
+
+                <TextView
+                    android:text="@string/jubilee"
+                    android:textAllCaps="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="45sp"
+                    android:background="@android:color/transparent"
+                    android:textStyle="bold"
+                    android:gravity="center_horizontal"
+                    android:scaleX="1.75" />
+
+                <TextView
+                    android:text="2017"
+                    android:textAllCaps="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="35sp"
+                    android:background="@android:color/transparent"
+                    android:textStyle="bold"
+                    android:gravity="center_horizontal"
+                    android:scaleX="1.5" />
+
+                <TextView
+                    android:text="Let's finish off what we started"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="center_horizontal" />
+            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:id="@+id/line3"
+                android:background="@color/yellow"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="false"
+                android:layout_height="120dp"
+                android:layout_above="@+id/line5"
+                android:layout_below="@+id/otherLayout"
+                android:layout_marginTop="-15dp"
+                android:layout_marginBottom="-15dp" />
+            <View
+                android:layout_width="1dp"
+                android:id="@+id/line4"
+                android:background="@color/yellow"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="false"
+                android:layout_height="120dp"
+                android:layout_above="@+id/line5"
+                android:layout_below="@+id/otherLayout"
+                android:layout_marginTop="-15dp"
+                android:layout_marginBottom="-15dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/line5"
+                android:background="@color/yellow"
+                android:layout_below="@+id/middleLayout"
+                android:layout_centerVertical="false"
+                android:layout_marginTop="10dp" />
+
+        </RelativeLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/welcome_button_background"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp">
+                <Button
+                    android:text="@string/register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sign_up_button"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/welcome_button_background"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp">
+                <Button
+                    android:text="@string/log_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sign_in_button"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/yellow"
+            android:layout_gravity="bottom|center_horizontal">
+
+            <TextView
+                android:text="@string/developed_by_bait_inc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp" />
+            <TextView
+                android:text="@string/by_signing_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black_overlay"
+                android:padding="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

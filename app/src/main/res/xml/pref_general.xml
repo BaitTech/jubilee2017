@@ -1,0 +1,44 @@
+<!--
+  ~ /*
+  ~  * ﻿Copyright 2017 Bait Inc
+  ~  * Licensed under the Apache License, Version 2.0 Jubilee 2017;
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *     http://www.apache.org/licenses/LICENSE-2.0
+  ~  * Unless required by applicable law or agreed to in writing,
+  ~  * software distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  *  limitations under the License.
+  ~  */
+  -->
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Main">
+        <ListPreference
+            android:key="county"
+            android:summary="Pick a county for localized news cards"
+            android:title="County"
+            android:entryValues="@array/counties"
+            android:entries="@array/counties"/>
+        <CheckBoxPreference
+            android:key="request_loc"
+            android:summaryOff="Turn on to enable location based updates"
+            android:summaryOn="Turn off to disable location based updates"
+            android:title="Location" />
+        <Preference
+            android:key="account"
+            android:summary="Update your account settings"
+            android:title="Account " />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="General">
+        <SwitchPreference
+            android:key="shuffle"
+            android:summaryOn="Turn off to disable page shuffling on main page"
+            android:summaryOff="Turn on to shuffle pages on main page"
+            android:title="Shuffle Pages" />
+    </PreferenceCategory>
+</PreferenceScreen>
