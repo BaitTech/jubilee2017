@@ -14,7 +14,9 @@
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="inc.bait.jubilee">
+    package="inc.bait.jubilee"
+    android:versionName="1.0"
+    android:versionCode="1">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -39,7 +41,6 @@
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
-
     <application
         android:name=".JubileeApp"
         android:allowBackup="true"
@@ -84,28 +85,27 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".ui.activity.InviteActivity"
-            android:label="@string/title_activity_invite" />
+            android:label="@string/title_activity_invite"/>
         <activity
             android:name=".ui.activity.FeedBackActivity"
             android:label="@string/title_activity_feed_back"
             android:theme="@style/AppTheme.NoActionBar" />
+        <!-- Include the AdActivity configChanges and theme. -->
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent" />
 
         <service
             android:name=".service.JubileeService"
             android:enabled="true"
             android:exported="true" />
-        <!-- This meta-data tag is required to use Google Play Services. -->
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".ui.activity.AdsActivity"
-            android:label="@string/title_activity_ads"></activity> <!-- Include the AdActivity configChanges and theme. -->
-        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent" />
+
     </application>
 
 </manifest>

@@ -26,8 +26,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import inc.bait.jubilee.R;
 import inc.bait.jubilee.model.appmodel.News;
@@ -50,6 +52,7 @@ public class WebActivity extends JubileeActivity {
     AdView bottomAd;
     Button acceptButton;
     Button rejectButton;
+    private InterstitialAd interstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +64,8 @@ public class WebActivity extends JubileeActivity {
         rejectButton = (Button) getView(R.id.reject_button);
         setHasBackButton(true);
         setShouldBeOnline();
+        interstitialAd = newInterstitialAd();
+        loadInterstitial();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -154,15 +159,45 @@ public class WebActivity extends JubileeActivity {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_SEND);
             intent.putExtra(Intent.EXTRA_SUBJECT, getTitle());
-            intent.putExtra(Intent.EXTRA_TEXT, news.getNewsDescription() + "\n\n\n"
+            intent.putExtra(Intent.EXTRA_TEXT,
+                    news.getNewsDescription() + "\n\n\n"
             +news.getNewsLink());
             intent.setType("text/plain");
-            startActivity(Intent.createChooser(intent, "Share with"));
+            startActivity(Intent.createChooser(intent,
+                    "Share with"));
         }
 
     }
     private void refresh() {
         loadSite(WebActivity.this.url);
+    }
+    private InterstitialAd newInterstitialAd() {
+        InterstitialAd interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                WebActivity.this.interstitialAd.show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+
+            }
+
+            @Override
+            public void onAdClosed() {
+
+            }
+        });
+        return interstitialAd;
+    }
+    private void loadInterstitial() {
+        AdRequest adRequest =
+                new AdRequest.Builder()
+                        .build();
+        interstitialAd.loadAd(adRequest);
+
     }
 
     @Override
@@ -207,7 +242,6 @@ public class WebActivity extends JubileeActivity {
             }
         };
         getHandler().post(runnable);
-        startActivity(getIntent(AdsActivity.class));
 
     }
     @SuppressLint("SetJavaScriptEnabled")

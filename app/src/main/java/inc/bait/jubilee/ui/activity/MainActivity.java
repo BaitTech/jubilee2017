@@ -75,6 +75,7 @@ public class MainActivity extends JubileeActivity
     NavigationView navigationView;
     ViewPager viewPager;
     CircularImageView profile;
+
     TextView name;
     TextView points;
     private A2FListener listener;
@@ -255,14 +256,14 @@ public class MainActivity extends JubileeActivity
                                 startActivity(intent);
                                 break;
 
-                            }/*
+                            }
+                            /*
                             case R.id.nav_invite: {
-                                Intent intent = getIntent(
-                                        InviteActivity.class);
-                                start_Activity(intent,
-                                        null);
+                                startActivity(getIntent(
+                                        InviteActivity.class));
                                 break;
-                            }*/
+                            }
+                            */
                             case R.id.nav_settings: {
                                 Intent intent = getIntent(
                                         SettingsActivity.class);
@@ -374,12 +375,6 @@ public class MainActivity extends JubileeActivity
         intent.putExtra(WebActivity.SHARE,
                 news);
         startActivity(intent);
-    }
-
-    @Override
-    public void finish() {
-        startActivity(getIntent(AdsActivity.class));
-        super.finish();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

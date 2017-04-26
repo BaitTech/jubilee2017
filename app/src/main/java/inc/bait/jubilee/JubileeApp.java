@@ -32,6 +32,8 @@ import inc.bait.jubilee.model.helper.BitmapCache;
 import inc.bait.jubilee.model.helper.util.LogUtil;
 import inc.bait.jubilee.service.JubileeService;
 import inc.bait.jubilee.ui.activity.JubileeActivity;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class JubileeApp extends MultiDexApplication {
@@ -48,7 +50,8 @@ public class JubileeApp extends MultiDexApplication {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
+        super.attachBaseContext(
+                CalligraphyContextWrapper.wrap(base));
         MultiDex.install(this);
     }
 
@@ -56,6 +59,10 @@ public class JubileeApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         app = this;
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Quicksand-Regular.otf")
+                .build()
+        );
 
     }
     public static synchronized JubileeApp getInstance() {

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:background="@color/white"
+    android:layout_marginBottom="10dp">
+
+    <inc.bait.jubilee.model.view.RoundedImageView
+        android:id="@+id/rounded_iv_profile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/detail_layout"
+        android:layout_toRightOf="@+id/rounded_iv_profile"
+        android:layout_toEndOf="@+id/rounded_iv_profile"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp">
+
+        <TextView
+            android:id="@+id/tv_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_toEndOf="@+id/rounded_iv_profile"
+            android:layout_toRightOf="@+id/rounded_iv_profile"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:text="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/number_textView"
+            android:textColor="@color/black_overlay"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/contact_checkBox"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

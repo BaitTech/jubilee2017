@@ -16,50 +16,71 @@
 package inc.bait.jubilee.ui.activity;
 
 import android.Manifest;
-import android.app.ProgressDialog;
+import android.app.LoaderManager;
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
+import android.view.View;
 
 import inc.bait.jubilee.R;
+import inc.bait.jubilee.model.adapter.ContactAdapter;
 import inc.bait.jubilee.model.appmodel.Contact;
 import inc.bait.jubilee.model.base.NonNullList;
-import inc.bait.jubilee.model.base.Transaction;
-import inc.bait.jubilee.model.error.LoadContactsError;
 import inc.bait.jubilee.model.helper.ApiHelper;
+import inc.bait.jubilee.model.helper.util.LogUtil;
 import inc.bait.jubilee.model.notification.Notification;
-import inc.bait.jubilee.model.transaction.LoadContactsTransaction;
-import inc.bait.jubilee.ui.fragments.ContactsListFragment;
 
-public class InviteActivity extends FragmentActivity implements
-        ContactsListFragment.OnContactsInteractionListener {
+public class InviteActivity extends JubileeActivity implements
+        LoaderManager.LoaderCallbacks<Cursor>{
+    private static final String[] PROJECTION = {
+            ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.LOOKUP_KEY,
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            ContactsContract.Contacts.HAS_PHONE_NUMBER
+    };
     private final int CONTACTS_REQUEST_CODE = 7;
     private final int SMS_REQUEST_CODE = 8;
+    private String TAG = LogUtil.makeLogTag(
+            InviteActivity.class);
     private boolean selectedAll = false;
-    private ProgressDialog progressDialog;
     private NonNullList<Contact> selectedContacts;
     private OnContactSelectedListener selectedListener;
-    private NonNullList<Contact> contacts;
+    private RecyclerView recyclerView;
+    private SearchView searchView;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ApiHelper.enableStrictMode(InviteActivity.class);
+        //ApiHelper.enableStrictMode(InviteActivity.class);
         setContentView(R.layout.content_invite);
+        setHasBackButton(true);
+        recyclerView = (RecyclerView)
+                findViewById(R.id.rv_contact_list);
+        fab = (FloatingActionButton)
+                findViewById(R.id.fab);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(
+                new DefaultItemAnimator());
 
-        ContactsListFragment mContactsListFragment =
-                (ContactsListFragment)
-                getSupportFragmentManager().findFragmentById(
-                        R.id.contact_list);
     }
 
     @Override
@@ -70,30 +91,30 @@ public class InviteActivity extends FragmentActivity implements
         selectedListener =
                 new OnContactSelectedListener() {
                     @Override
-                    public void OnSelected(Contact contact) {
+                    public void onSelected(Contact contact) {
                         selectedContacts.add(contact);
                     }
 
                     @Override
-                    public void OnDeselected(Contact contact) {
+                    public void onUnselected(Contact contact) {
                         if (selectedContacts.isEmpty()) {
                             return;
                         }
                         selectedContacts.remove(contact);
                     }
-                };/*
-        inviteButton.setOnClickListener(
+                };
+        fab.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         sendSms();
                     }
-                });*/
+                });
         ApiHelper.isReadContactsAllowed(this,
                 new ApiHelper.CallBack() {
                     @Override
                     public void onSuccess() {
-                        //loadContacts();
+                        loadContacts();
                     }
 
                     @Override
@@ -111,113 +132,38 @@ public class InviteActivity extends FragmentActivity implements
     }
 
     private void loadContacts() {
-        progressDialog =
-                new ProgressDialog(this);
-        progressDialog.setMessage(
-                "Loading contacts");
-        progressDialog.show();
-        Transaction.WithTask(
-                new Transaction.Custom() {
-                    @Override
-                    public void transact() {
-                        LoadContactsTransaction.With(
-                                InviteActivity.this,
-                                new LoadContactsTransaction
-                                        .OnLoadListener() {
-                                    @Override
-                                    public void OnComplete(
-                                            NonNullList<Contact> contacts) {
-                                        InviteActivity.this.contacts =
-                                                contacts;
-                                        displayContacts(
-                                                contacts);
-                                    }
-                                },
-                                new LoadContactsTransaction
-                                        .CallBack<Contact,
-                                        LoadContactsError>() {
-                                    @Override
-                                    public void OnProgress(String message) {
-
-                                    }
-
-                                    @Override
-                                    public void OnProgress(int progress) {
-
-                                    }
-
-                                    @Override
-                                    public Contact OnError(
-                                            LoadContactsError loadContactsError) {
-
-                                        return null;
-                                    }
-
-
-                                })
-                                .appLyFilter(
-                                        LoadContactsTransaction.Filter
-                                                .PHONE_NUMBERS)
-                                .load();
-                    }
-                })
-                .execute(2000);
-    }
-
-    private void displayContacts(final ArrayList<Contact> contacts1) {
-        Runnable runnable =
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        /*recyclerView.setAdapter(
-                                new ContactsAdapter(contacts1,
-                                        selectedListener));
-                        assert progressDialog != null;
-                        progressDialog.dismiss();
-                        */
-                    }
-                };
-        //getHandler().post(runnable);
-
+        getLoaderManager().initLoader(0,
+                null,
+                this);
     }
 
     private void sendSms() {
-        Transaction.WithTask(
-                new Transaction.Custom() {
+        LogUtil.e(TAG, "Sending sms");
+        ApiHelper.isSendSmsAllowed(
+                InviteActivity.this,
+                new ApiHelper.CallBack() {
                     @Override
-                    public void transact() {
-                        if (selectedContacts.isEmpty()) {
-                            return;
-                        }
-                        ApiHelper.isSendSmsAllowed(
-                                InviteActivity.this,
-                                new ApiHelper.CallBack() {
-                                    @Override
-                                    public void onSuccess() {
-                                        inviteContactsBySms(
-                                                selectedContacts);
-                                    }
-
-                                    @Override
-                                    public void onFailure() {
-                                        if (Build.VERSION.SDK_INT >=
-                                                Build.VERSION_CODES.M) {
-                                            requestPermissions(
-                                                    new String[]{
-                                                            Manifest.permission
-                                                                    .SEND_SMS},
-                                                    SMS_REQUEST_CODE);
-                                        }
-                                    }
-                                });
+                    public void onSuccess() {
+                        inviteContactsBySms(
+                                selectedContacts);
                     }
-                })
-                .execute();
+
+                    @Override
+                    public void onFailure() {
+                        if (Build.VERSION.SDK_INT >=
+                                Build.VERSION_CODES.M) {
+                            requestPermissions(
+                                    new String[]{
+                                            Manifest.permission
+                                                    .SEND_SMS},
+                                    SMS_REQUEST_CODE);
+                        }
+                    }
+                });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /*
         getMenuInflater().inflate(R.menu.menu_invite,
                 menu);
         MenuItem searchItem =
@@ -233,7 +179,7 @@ public class InviteActivity extends FragmentActivity implements
             searchView.setSearchableInfo(
                     searchManager.getSearchableInfo(
                             getComponentName()));
-            queryTextListener =
+            SearchView.OnQueryTextListener queryTextListener =
                     new SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(
@@ -251,43 +197,31 @@ public class InviteActivity extends FragmentActivity implements
                     };
             searchView.setOnQueryTextListener(
                     queryTextListener);
-        }*/
+        }
         return true;
     }
 
-    private void filterContacts(String query) {
-        if (contacts == null ||
-                contacts.isEmpty()) {
-            return;
-        }
-        ArrayList<Contact> contacts1 =
-                new ArrayList<>();
-        for (Contact contact : contacts) {
-            if (contact.getName().contains(
-                    query)) {
-                contacts1.add(
-                        contact);
-            }
-        }
-        displayContacts(contacts1);
+    private void filterContacts(final String query) {
+        getLoaderManager().initLoader(0,
+                null,
+                this);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*
-        int id = item.getItemId();
-        if (id == R.id.action_select_all) {
-            if (selectedAll) {
-                selectedContacts.clear();
-            } else {
-
+        switch (item.getItemId()) {
+            case R.id.action_select_all: {
+                break;
             }
-            return true;
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 
-    private void inviteContactsBySms(ArrayList<Contact> contacts) {
+    private void inviteContactsBySms(NonNullList<Contact> contacts) {
+        if (contacts.isEmpty()) {
+            LogUtil.e(TAG, "Sending sms, contacts empty");
+            return;
+        }
         String message =
                 "Please feel welcome to join" +
                         "me in supporting " +
@@ -298,6 +232,9 @@ public class InviteActivity extends FragmentActivity implements
                 SmsManager.getDefault();
         try {
             for (Contact contact : contacts) {
+                LogUtil.e(TAG,
+                        "sending to " +
+                                contact.getName());
                 manager.sendTextMessage(
                         contact.getPhone(),
                         null,
@@ -311,6 +248,7 @@ public class InviteActivity extends FragmentActivity implements
                     .addMessage("Could not send messages")
                     .notify(Notification.DIALOG);
         }
+        finish();
     }
 
     @Override
@@ -321,8 +259,7 @@ public class InviteActivity extends FragmentActivity implements
             case CONTACTS_REQUEST_CODE: {
                 if (grantResults[0] ==
                         PackageManager.PERMISSION_GRANTED) {
-                    //loadContacts();
-
+                    loadContacts();
                     break;
                 }
             }
@@ -338,20 +275,32 @@ public class InviteActivity extends FragmentActivity implements
                 permissions,
                 grantResults);
     }
-
     @Override
-    public void onContactSelected(Uri contactUri) {
+    public Loader<Cursor> onCreateLoader(int id,
+                                         Bundle args) {
+        Uri contentUri =
+                ContactsContract.Contacts.CONTENT_URI;
+        return new CursorLoader(
+                InviteActivity.this,
+                contentUri,
+                PROJECTION,
+                null,
+                null,
+                null);
+    }
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        recyclerView.setAdapter(new ContactAdapter(this,
+                data,
+                selectedListener));
     }
 
     @Override
-    public void onSelectionCleared() {
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-
-
     public interface OnContactSelectedListener {
-        void OnSelected(Contact contact);
-
-        void OnDeselected(Contact contact);
+        void onSelected(Contact contact);
+        void onUnselected(Contact contact);
     }
 }

@@ -15,7 +15,7 @@
 
 package inc.bait.jubilee.model.appmodel;
 
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -24,10 +24,12 @@ import android.os.Parcelable;
  */
 
 public class Contact implements Parcelable {
+    public Uri profilePic;
     private String name;
     private String email;
     private String phone;
-    private Bitmap photo;
+    private long id;
+
 
     public Contact(String name) {
         this.name = name;
@@ -62,13 +64,22 @@ public class Contact implements Parcelable {
         this.phone = phone;
     }
 
-    public Bitmap getPhoto() {
-        return photo;
+    public Uri getProfilePic() {
+        return profilePic;
     }
 
-    public void setPhoto(Bitmap photo) {
-        this.photo = photo;
+    public void setProfilePic(Uri profilePic) {
+        this.profilePic = profilePic;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
     @Override
     public int describeContents() {
@@ -77,20 +88,22 @@ public class Contact implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.profilePic, flags);
         dest.writeString(this.name);
         dest.writeString(this.email);
         dest.writeString(this.phone);
-        dest.writeParcelable(this.photo, flags);
+        dest.writeLong(this.id);
     }
 
     protected Contact(Parcel in) {
+        this.profilePic = in.readParcelable(Uri.class.getClassLoader());
         this.name = in.readString();
         this.email = in.readString();
         this.phone = in.readString();
-        this.photo = in.readParcelable(Bitmap.class.getClassLoader());
+        this.id = in.readLong();
     }
 
-    public static final Parcelable.Creator<Contact> CREATOR = new Parcelable.Creator<Contact>() {
+    public static final Creator<Contact> CREATOR = new Creator<Contact>() {
         @Override
         public Contact createFromParcel(Parcel source) {
             return new Contact(source);

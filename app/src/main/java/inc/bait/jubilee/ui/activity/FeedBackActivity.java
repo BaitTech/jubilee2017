@@ -16,6 +16,8 @@
 package inc.bait.jubilee.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -68,13 +70,11 @@ public class FeedBackActivity extends JubileeActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 
     private void sendFeedBack(View view,
-                              String subject,
-                              String message) {
+                              final String subject,
+                              final String message) {
         if (TextUtils.isEmpty(message) ||
                 TextUtils.isEmpty(subject)) {
             Snackbar.make(view,
@@ -95,7 +95,22 @@ public class FeedBackActivity extends JubileeActivity {
                                            FeedBackData feedBackData) {
                         switch (id) {
                             case Send_Id : {
-
+                                Intent emailIntent =
+                                        new Intent(
+                                        Intent.ACTION_SENDTO,
+                                        Uri.fromParts(
+                                        "mailto",
+                                                "technologiesbait@gmail.com",
+                                                null));
+                                emailIntent.putExtra(
+                                        Intent.EXTRA_SUBJECT,
+                                        subject);
+                                emailIntent.putExtra(
+                                        Intent.EXTRA_TEXT,
+                                        message);
+                                startActivity(Intent.createChooser(
+                                        emailIntent,
+                                        "Send email..."));
                             }
                         }
                     }
@@ -129,7 +144,8 @@ public class FeedBackActivity extends JubileeActivity {
         @Override
         public CallBacks<FeedBackData,
                 String> getCallBacks() {
-            return new CallBacks<FeedBackData, String>() {
+            return new CallBacks<FeedBackData,
+                    String>() {
                 @Override
                 public void OnStart() {
 
@@ -141,15 +157,18 @@ public class FeedBackActivity extends JubileeActivity {
                 }
 
                 @Override
-                public void OnProgress(String... s) {
-
+                public void OnProgress(
+                        String... s) {
                 }
 
                 @Override
-                public void OnEnd(FeedBackData data) {
-
+                public void OnEnd(
+                        FeedBackData data) {
                 }
             };
         }
+    }
+    private void send(Intent intent) {
+        startActivity(intent);
     }
 }
